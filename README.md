@@ -56,7 +56,12 @@ Cache skipped due to warnings: project.core
 ```
 
 Note that this can be mitigated by dropping all the `(do :nothing)`
-statements in `project.b` to reduce the compile time.
+statements in `project.b` to reduce the compile time of `project.b`.
 
-It can also be mitigated by either commenting the `project.a` require
-on L2 of `project.core`, or setting shadow to `:parallel-build false`.
+It appears that while the compilation each of namespace is launched in
+dependency order, macro usage may require the serialization of
+dependent namespaces that have transitive dependencies between them.
+
+Serializing all compilation via `:parallel-build false` does also
+sidestep the issue, but is probably overkill in the vast majority of
+cases.
